@@ -15,8 +15,7 @@ public class Player : MonoBehaviour
     {
         myRigidbody = GetComponent<Rigidbody>();
     }
-
-    // Update is called once per frame
+    
     void Update()
     {
         Vector3 input = new Vector3(Input.GetAxisRaw("Horizontal"), 
