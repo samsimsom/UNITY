@@ -5,21 +5,34 @@ using UnityEngine;
 public class NumberWizard : MonoBehaviour
 {
     // class variables
-    int maxNumber = 1000;
-    int minNumber = 1;
-    int guess = 500;
+    private int minNumber;
+    private int maxNumber;
+    private int guess;
+
+    private void StartGame()
+    {
+        minNumber = 1;
+        maxNumber = 1000;
+        guess = 500;
+        
+        Debug.Log("--- Welcome to Number Wizard ---");
+        Debug.Log("Pick an number, don't tell me what it is...");
+        Debug.Log($"The number you can pick between {minNumber} to {maxNumber}");
+        Debug.Log($"Tell me if your nunmber is higher or lower than {guess}");
+        Debug.Log("Push Up: Higher - Push Down: Lower - Push Enter: Correct");
+        maxNumber += 1;
+    }
+    
+    private void NextGuess()
+    {
+        guess = (maxNumber + minNumber) / 2;
+        Debug.Log($"Is it higher or lower than {guess}");
+    }
     
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("--- Welcome to Number Wizard ---");
-        Debug.Log("Pick an number, don't tell me what it is...");
-        Debug.Log($"The number you can pick between " +
-                  $"{minNumber} to {maxNumber}");
-        Debug.Log("Tell me if your nunmber is higher or " +
-                  "lower than 500");
-        Debug.Log("Push Up: Higher - Push Down: Lower - " +
-                  "Push Enter: Correct");
+        StartGame();
     }
 
     // Update is called once per frame
@@ -28,21 +41,18 @@ public class NumberWizard : MonoBehaviour
         // Press UpArrow
         if (Input.GetKeyDown(KeyCode.UpArrow))
         {
-            Debug.Log("Up Arrow Key was Pressed!");
             minNumber = guess;
-            Debug.Log(guess);
+            NextGuess();
         }
-
-        if (Input.GetKeyDown(KeyCode.DownArrow))
+        else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
-            Debug.Log("Down Arrow Key was Pressed!");
             maxNumber = guess;
-            Debug.Log(guess);
+            NextGuess();
         }
-
-        if (Input.GetKeyDown(KeyCode.Return))
+        else if (Input.GetKeyDown(KeyCode.Return))
         {
-            Debug.Log("Return!");
+            Debug.Log("I am a genius!");
+            StartGame();
         }
     }
 }
