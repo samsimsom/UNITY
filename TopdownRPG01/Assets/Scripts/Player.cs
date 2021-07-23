@@ -5,8 +5,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private BoxCollider2D _boxCollider;
-    private Vector3 _moveDelta;
     private SpriteRenderer _playerSprite;
+    private Vector3 _moveDelta;
 
     private void Start()
     {
@@ -16,11 +16,12 @@ public class Player : MonoBehaviour
     
     private void FixedUpdate()
     {
-        float x = Input.GetAxisRaw("Horizontal");
-        float y = Input.GetAxisRaw("Vertical");
+        var x = Input.GetAxisRaw("Horizontal");
+        var y = Input.GetAxisRaw("Vertical");
+        var z = 0;
         
         // Reset _moveDelta
-        _moveDelta = new Vector3(x, y, 0);
+        _moveDelta = new Vector3(x, y, z);
         
         // Swap sprite direction, wether you're going left or right
         if (_moveDelta.x > 0)
@@ -31,5 +32,7 @@ public class Player : MonoBehaviour
         {
             _playerSprite.flipX = true;
         }
+        
+        transform.Translate(_moveDelta * Time.deltaTime);
     }
 }
