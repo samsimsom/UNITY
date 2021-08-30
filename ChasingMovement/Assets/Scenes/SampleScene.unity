@@ -753,7 +753,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ced5aa8deafd3249814fd5d1960e581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetTronsform: {fileID: 574554412}
+  targetTransform: {fileID: 574554412}
   speed: 7
 --- !u!135 &1866436219
 SphereCollider:
