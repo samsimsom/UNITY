@@ -1,17 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Security.Cryptography;
 using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public GameObject fallingBlockPrefab;
+    [SerializeField] private GameObject fallingBlockPrefab;
+
     private Vector2 screenHalfWithInWorldUnits;
 
-    public float secondsBerweenSpawns = 1.0f;
+    [SerializeField] private Vector2 secondsBerweenSpawnsMinMax;
+
     private float nextSpawnTime;
 
-    public Vector2 blockSizeMinMax;
-    public float spawnAngleMax;
+    [SerializeField] private Vector2 blockSizeMinMax;
+    [SerializeField] private float spawnAngleMax;
 
     // Start is called before the first frame update
     void Start()
@@ -26,22 +29,23 @@ public class Spawner : MonoBehaviour
     {
         if (Time.time > nextSpawnTime)
         {
-            nextSpawnTime = Time.time + secondsBerweenSpawns;
-            
-            float spawnAngle = Random.Range(-spawnAngleMax, spawnAngleMax);
-            print(spawnAngle);
-            float blockSize = Random.Range(blockSizeMinMax.x, blockSizeMinMax.y);
-            
-            Vector2 spawnPosition = new Vector2(Random.Range(-screenHalfWithInWorldUnits.x, 
-                    screenHalfWithInWorldUnits.x), 
-                screenHalfWithInWorldUnits.y + blockSize);
+            // Difficulty
+            float secondsBetweenSpawns = Mathf.Lerp(secondsBerweenSpawnsMinMax.y, 
+                secondsBerweenSpawnsMinMax.x, Difficulty.GetDifficultyPercent());
 
-            GameObject block = (GameObject)Instantiate(fallingBlockPrefab, 
+            nextSpawnTime = Time.time + secondsBetweenSpawns;
+
+            float spawnAngle = Random.Range(-spawnAngleMax, spawnAngleMax);
+            float blockSize = Random.Range(blockSizeMinMax.x, blockSizeMinMax.y);
+
+            Vector2 spawnPosition = new Vector2(Random.Range(-screenHalfWithInWorldUnits.x,
+                    screenHalfWithInWorldUnits.x), screenHalfWithInWorldUnits.y + blockSize);
+
+            GameObject block = (GameObject)Instantiate(fallingBlockPrefab,
                 spawnPosition, Quaternion.Euler(Vector3.forward * spawnAngle));
-            
+
             block.transform.localScale = new Vector3(blockSize, blockSize, 1);
             block.transform.parent = transform;
         }
-
     }
 }

@@ -1,13 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private float speed = 5;
+    [SerializeField] private float speed;
     private float screenHalfWithInWorldUnit;
     private float playerHalfWith;
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -24,7 +25,7 @@ public class PlayerController : MonoBehaviour
         float velocity = inputX * speed;
         // Vector2.right = Vector2(1, 0) x, y
         transform.Translate(Vector2.right * velocity * Time.deltaTime);
-        
+
         ScreenWrapAround();
     }
 
@@ -41,9 +42,11 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-
-    private void ScreenCollision()
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        
+        if (other.tag == "block")
+        {
+            Destroy(gameObject);
+        }
     }
 }
