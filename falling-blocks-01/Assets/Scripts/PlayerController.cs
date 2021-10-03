@@ -5,40 +5,50 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    // Event
+    public event System.Action OnPlayerDeath;
+    
     [SerializeField] private float speed;
-    private float screenHalfWithInWorldUnit;
-    private float playerHalfWith;
+    private float _screenHalfWithInWorldUnit;
+    private float _playerHalfWith;
 
     // Start is called before the first frame update
     void Start()
     {
-        playerHalfWith = transform.localScale.x / 2.0f;
-        screenHalfWithInWorldUnit = (Camera.main.aspect * Camera.main.orthographicSize) + playerHalfWith;
+        // Playerin genisliginin yarisini hepsaliyor.
+        _playerHalfWith = transform.localScale.x / 2.0f;
+        // Ekranin genisliginin yarisina playerin henisliginin yarisini
+        // ekliyor. ScreenWrapAround icin kullanacak.
+        _screenHalfWithInWorldUnit = (Camera.main.aspect * Camera.main.orthographicSize) + _playerHalfWith;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // direction
-        float inputX = Input.GetAxisRaw("Horizontal");
-        // velocity = direction * speed
-        float velocity = inputX * speed;
-        // Vector2.right = Vector2(1, 0) x, y
-        transform.Translate(Vector2.right * velocity * Time.deltaTime);
-
+        Movement();
         ScreenWrapAround();
     }
 
+    private void Movement()
+    {
+        float inputX = Input.GetAxisRaw("Horizontal"); // direction
+        float velocity = inputX * speed; // velocity = direction * speed
+        // Vector2.right = Vector2(1, 0) x, y
+        transform.Translate(Vector2.right * velocity * Time.deltaTime);
+    }
+    
     private void ScreenWrapAround()
     {
-        if (transform.position.x < -screenHalfWithInWorldUnit)
+        if (transform.position.x < -_screenHalfWithInWorldUnit)
         {
-            transform.position = new Vector2(screenHalfWithInWorldUnit, transform.position.y);
+            transform.position = new Vector2(_screenHalfWithInWorldUnit, 
+                transform.position.y);
         }
 
-        if (transform.position.x > screenHalfWithInWorldUnit)
+        if (transform.position.x > _screenHalfWithInWorldUnit)
         {
-            transform.position = new Vector2(-screenHalfWithInWorldUnit, transform.position.y);
+            transform.position = new Vector2(-_screenHalfWithInWorldUnit, 
+                transform.position.y);
         }
     }
 
@@ -46,6 +56,14 @@ public class PlayerController : MonoBehaviour
     {
         if (other.tag == "block")
         {
+            // Direct connection
+            // FindObjectOfType<GameOver>().OnGameOver();
+
+            if (OnPlayerDeath != null)
+            {
+                OnPlayerDeath(); // invoke
+            }
+            
             Destroy(gameObject);
         }
     }

@@ -7,14 +7,14 @@ public class FallingBlock : MonoBehaviour
 {
     [SerializeField] private Vector2 speedMinMax;
 
-    private float speed;
-    private float visibleHeightTreshold;
+    private float _speed;
+    private float _visibleHeightTreshold;
 
     // Start is called before the first frame update
     void Start()
     {
-        speed = Mathf.Lerp(speedMinMax.x, speedMinMax.y, Difficulty.GetDifficultyPercent());
-        visibleHeightTreshold = -Camera.main.orthographicSize - transform.localScale.y;
+        _speed = Mathf.Lerp(speedMinMax.x, speedMinMax.y, Difficulty.GetDifficultyPercent());
+        _visibleHeightTreshold = -Camera.main.orthographicSize - transform.localScale.y;
     }
 
     // Update is called once per frame
@@ -27,13 +27,13 @@ public class FallingBlock : MonoBehaviour
 
     private void Movement()
     {
-        transform.Translate(Vector3.down * speed * Time.deltaTime, Space.Self);
+        transform.Translate(Vector3.down * _speed * Time.deltaTime, Space.Self);
     }
 
 
     private void DestroyPassedBlock()
     {
-        if (transform.position.y < visibleHeightTreshold)
+        if (transform.position.y < _visibleHeightTreshold)
         {
             Destroy(gameObject);
         }

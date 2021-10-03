@@ -893,6 +893,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8d76adfee64a4b14c9a38d5875692e34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  gameOverScreen: {fileID: 1059241043}
+  secondsSurvivedUI: {fileID: 437129833}
 --- !u!4 &1346504319
 Transform:
   m_ObjectHideFlags: 0
@@ -1224,5 +1226,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   fallingBlockPrefab: {fileID: 4520438765792070767, guid: 95a1b78c70f295e4399fba4d0c9d3daa, type: 3}
   secondsBerweenSpawnsMinMax: {x: 0.1, y: 1}
-  blockSizeMinMax: {x: 0.3, y: 2.3}
+  blockSizeMinMax: {x: 0.3, y: 2}
   spawnAngleMax: 15
