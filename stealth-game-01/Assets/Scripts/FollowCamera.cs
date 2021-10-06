@@ -6,7 +6,7 @@ public class FollowCamera : MonoBehaviour
 {
 
     [SerializeField] private Transform target;
-    [SerializeField] private float smoothSpeed = 1.25f;
+    [SerializeField] private float smoothSpeed = 2.0f;
     
     
     // Start is called before the first frame update
@@ -16,11 +16,11 @@ public class FollowCamera : MonoBehaviour
     }
 
     // Update is called once per frame
-    void LateUpdate()
+    void FixedUpdate()
     {
         Vector3 desiredPosition = target.position;
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, 
-            desiredPosition, smoothSpeed * Time.deltaTime);
+            desiredPosition, smoothSpeed * Time.fixedDeltaTime);
         transform.position = smoothedPosition;
     }
 }

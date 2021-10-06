@@ -10,13 +10,28 @@ public class Guard : MonoBehaviour
     [SerializeField] private float waitTime = 0.3f;
     [SerializeField] private float turnSpeed = 90.0f;
 
+    [SerializeField] private Light spotlight;
+    [SerializeField] private float viewDistance;
+    [SerializeField] private LayerMask viewMask;
+
+    private float _viewAngle;
+    private Transform _player;
+    private Color _originalSpotlightColor;
 
     private void OnDrawGizmos()
     {
         DrawPath();
+        DrawViewDistance();
     }
 
 
+    private void DrawViewDistance()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(transform.position, transform.forward * viewDistance);
+    }
+
+    
     private void DrawPath()
     {
         Vector3 startPosition = pathHolder.GetChild(0).position;
@@ -91,9 +106,30 @@ public class Guard : MonoBehaviour
     }
 
 
+    private bool CanSeePlayer()
+    {
+        if (Vector3.Distance(transform.position, _player.position) < viewDistance)
+        {
+            Vector3 dirToPlayer = (_player.position - transform.position).normalized;
+            float angleBetweenGuardAndPlayer = Vector3.Angle(transform.forward, dirToPlayer);
+            if (angleBetweenGuardAndPlayer < _viewAngle / 2.0f)
+            {
+                if (!Physics.Linecast(transform.position, _player.position, viewMask))
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
+        _player = GameObject.FindGameObjectWithTag("Player").transform;
+        _viewAngle = spotlight.spotAngle;
+        _originalSpotlightColor = spotlight.color;
         StartCoroutine(FollowPath(GetWaypointPosition()));
     }
 
@@ -101,5 +137,13 @@ public class Guard : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (CanSeePlayer())
+        {
+            spotlight.color = Color.red;
+        }
+        else
+        {
+            spotlight.color = _originalSpotlightColor;
+        }
     }
 }

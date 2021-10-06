@@ -12,7 +12,7 @@ public class Player : MonoBehaviour
     private float angle;
     private float smoothInputMagnitude;
     private float smooothMoveVelocity;
-    private Vector3 velocity;
+    private Vector3 _velocity;
 
     private Rigidbody _rigidbody;
     
@@ -36,18 +36,14 @@ public class Player : MonoBehaviour
         smoothInputMagnitude = Mathf.SmoothDamp(smoothInputMagnitude, inputMagnitude, ref smooothMoveVelocity, smoothMoveTime);
         float targetAngle = Mathf.Atan2(inputDirection.x, inputDirection.z) * Mathf.Rad2Deg;
         angle = Mathf.LerpAngle(angle, targetAngle, Time.deltaTime * turnSpeed * inputMagnitude);
-        
-        // transform.eulerAngles = Vector3.up * angle;
-        // Vector3 translation = transform.forward * (moveSpeed * Time.deltaTime * smoothInputMagnitude);
-        // transform.Translate(translation, Space.World);
 
-        velocity = transform.forward * moveSpeed * smoothInputMagnitude;
+        _velocity = transform.forward * moveSpeed * smoothInputMagnitude;
     }
 
 
     private void FixedUpdate()
     {
         _rigidbody.MoveRotation(Quaternion.Euler(Vector3.up * angle));
-        _rigidbody.MovePosition(_rigidbody.position + velocity * Time.deltaTime);
+        _rigidbody.MovePosition(_rigidbody.position + _velocity * Time.deltaTime);
     }
 }
