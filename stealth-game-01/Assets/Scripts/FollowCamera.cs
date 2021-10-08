@@ -16,11 +16,21 @@ public class FollowCamera : MonoBehaviour
     }
 
     // Update is called once per frame
+    /*
     void FixedUpdate()
     {
         Vector3 desiredPosition = target.position;
         Vector3 smoothedPosition = Vector3.Lerp(transform.position, 
             desiredPosition, smoothSpeed * Time.fixedDeltaTime);
+        transform.position = smoothedPosition;
+    }
+    */
+    
+    void LateUpdate()
+    {
+        Vector3 desiredPosition = target.position;
+        Vector3 smoothedPosition = Vector3.Lerp(transform.position, 
+            desiredPosition, smoothSpeed * Time.deltaTime);
         transform.position = smoothedPosition;
     }
 }
