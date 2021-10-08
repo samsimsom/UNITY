@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,17 +16,8 @@ public class FollowCamera : MonoBehaviour
         
     }
 
-    // Update is called once per frame
-    /*
-    void FixedUpdate()
-    {
-        Vector3 desiredPosition = target.position;
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, 
-            desiredPosition, smoothSpeed * Time.fixedDeltaTime);
-        transform.position = smoothedPosition;
-    }
-    */
     
+    // Update is called once per frame
     void LateUpdate()
     {
         Vector3 desiredPosition = target.position;

@@ -5,10 +5,13 @@ using UnityEngine;
 
 public class Guard : MonoBehaviour
 {
+    public static event System.Action OnGuardHasSpottedPlayer;
+    
     [SerializeField] private Transform pathHolder;
     [SerializeField] private float speed = 5;
     [SerializeField] private float waitTime = 0.3f;
     [SerializeField] private float turnSpeed = 90.0f;
+    [SerializeField] private float timeToSpotPlayer = 0.5f;
 
     [SerializeField] private Light spotlight;
     [SerializeField] private float viewDistance;
@@ -17,7 +20,9 @@ public class Guard : MonoBehaviour
     private float _viewAngle;
     private Transform _player;
     private Color _originalSpotlightColor;
+    private float _playerVisibleTimer;
 
+    
     private void OnDrawGizmos()
     {
         DrawPath();
@@ -124,6 +129,7 @@ public class Guard : MonoBehaviour
         return false;
     }
 
+    
     // Start is called before the first frame update
     void Start()
     {
@@ -139,11 +145,25 @@ public class Guard : MonoBehaviour
     {
         if (CanSeePlayer())
         {
-            spotlight.color = Color.red;
+            // spotlight.color = Color.red;
+            _playerVisibleTimer += Time.deltaTime;
         }
         else
         {
-            spotlight.color = _originalSpotlightColor;
+            // spotlight.color = _originalSpotlightColor;
+            _playerVisibleTimer -= Time.deltaTime;
         }
+
+        _playerVisibleTimer = Mathf.Clamp(_playerVisibleTimer, 0, timeToSpotPlayer);
+        spotlight.color = Color.Lerp(_originalSpotlightColor, Color.red, _playerVisibleTimer / timeToSpotPlayer);
+
+        if (_playerVisibleTimer >= timeToSpotPlayer)
+        {
+            if (OnGuardHasSpottedPlayer != null)
+            {
+                OnGuardHasSpottedPlayer();
+            }
+        }
+        
     }
 }
