@@ -2,14 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 [RequireComponent(typeof(PlayerController))]
+[RequireComponent(typeof(GunController))]
+
 public class Player : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 5;
 
     private Camera _viewCamera;
     private PlayerController _controller;
+    private GunController _gunController;
 
 
     private Vector3 CalculateVelocity()
@@ -42,6 +44,7 @@ public class Player : MonoBehaviour
     void Start()
     {
         _controller = GetComponent<PlayerController>();
+        _gunController = GetComponent<GunController>();
         _viewCamera = Camera.main;
     }
 
@@ -50,5 +53,10 @@ public class Player : MonoBehaviour
     {
         _controller.Move(CalculateVelocity());
         DrawRayFromCamera();
+
+        if (Input.GetMouseButton(0))
+        {
+            _gunController.Shoot();
+        }
     }
 }
