@@ -41,6 +41,15 @@ public class Player : MonoBehaviour
         }
     }
 
+
+    private void Shoot()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            _gunController.Shoot();
+        }
+    }
+    
     void Start()
     {
         _controller = GetComponent<PlayerController>();
@@ -53,10 +62,6 @@ public class Player : MonoBehaviour
     {
         _controller.Move(CalculateVelocity());
         DrawRayFromCamera();
-
-        if (Input.GetMouseButton(0))
-        {
-            _gunController.Shoot();
-        }
+        Shoot();
     }
 }
