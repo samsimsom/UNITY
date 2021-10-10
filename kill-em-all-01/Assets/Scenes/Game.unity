@@ -407,8 +407,9 @@ GameObject:
   - component: {fileID: 1161236678}
   - component: {fileID: 1161236677}
   - component: {fileID: 1161236676}
-  - component: {fileID: 1161236681}
   - component: {fileID: 1161236680}
+  - component: {fileID: 1161236681}
+  - component: {fileID: 1161236682}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
@@ -508,7 +509,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 240
-  m_StoppingDistance: 0
+  m_StoppingDistance: 2
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -526,6 +527,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b76a540fa26f924593e50f1276ef576, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1161236682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1161236675}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8a478b00474a014ab3a1580e7500e87, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1393831552
@@ -649,9 +662,10 @@ GameObject:
   m_Component:
   - component: {fileID: 1730357498}
   - component: {fileID: 1730357499}
+  - component: {fileID: 1730357500}
   m_Layer: 0
   m_Name: CameraPivot
-  m_TagString: MainCamera
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -685,6 +699,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _target: {fileID: 1770425398}
   _smoothSpeed: 1.25
+--- !u!114 &1730357500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1730357497}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b4ee763a4560e740a7d7685f372f6f4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _target: {fileID: 1770425398}
+  smoothSpeed: 0.125
 --- !u!1 &1770425394
 GameObject:
   m_ObjectHideFlags: 0
@@ -825,7 +853,7 @@ Rigidbody:
   m_AngularDrag: 0.05
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 112
   m_CollisionDetection: 0
 --- !u!114 &1770425402
