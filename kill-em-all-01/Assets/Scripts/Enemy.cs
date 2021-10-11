@@ -23,7 +23,7 @@ public class Enemy : LivingEntity
 
     IEnumerator UpdatePath()
     {
-        float refreshRate = 0.25f;
+        float refreshRate = 2f;
 
         while (target != null)
         {
