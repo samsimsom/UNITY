@@ -5,7 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerController))]
 [RequireComponent(typeof(GunController))]
 
-public class Player : MonoBehaviour
+public class Player : LivingEntity
 {
     [SerializeField] private float moveSpeed = 5;
 
@@ -13,7 +13,24 @@ public class Player : MonoBehaviour
     private PlayerController _controller;
     private GunController _gunController;
 
+    
+    protected override void Start()
+    {
+        base.Start();
+        _controller = GetComponent<PlayerController>();
+        _gunController = GetComponent<GunController>();
+        _viewCamera = Camera.main;
+    }
 
+
+    void Update()
+    {
+        _controller.Move(CalculateVelocity());
+        DrawRayFromCamera();
+        Shoot();
+    }
+    
+    
     private Vector3 CalculateVelocity()
     {
         float inputX = Input.GetAxisRaw("Horizontal");
@@ -41,22 +58,13 @@ public class Player : MonoBehaviour
         }
     }
 
-    void Start()
+
+    private void Shoot()
     {
-        _controller = GetComponent<PlayerController>();
-        _gunController = GetComponent<GunController>();
-        _viewCamera = Camera.main;
-    }
-
-
-    void Update()
-    {
-        _controller.Move(CalculateVelocity());
-        DrawRayFromCamera();
-
         if (Input.GetMouseButton(0))
         {
             _gunController.Shoot();
         }
     }
+    
 }

@@ -4,22 +4,45 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviour
 {
+    [SerializeField] private LayerMask collisionMask;
     private float speed = 10.0f;
+    private float damage = 1.0f;
 
+    
     public void SetSpeed(float newSpeed)
     {
         speed = newSpeed;
     }
-    
-    // Start is called before the first frame update
-    void Start()
+
+
+    void CheckCollisions(float movedistance)
     {
-        
+        Ray ray = new Ray(transform.position, transform.forward);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit, movedistance, 
+            collisionMask, QueryTriggerInteraction.Collide))
+        {
+            OnHitObject(hit);
+        }
     }
 
-    // Update is called once per frame
+
+    void OnHitObject(RaycastHit hit)
+    {
+        IDamageable damageableObject = hit.collider.GetComponent<IDamageable>();
+        if (damageableObject != null)
+        {
+            damageableObject.TakeHit(damage, hit);
+        }
+        GameObject.Destroy(gameObject);
+    }
+    
+    
     void Update()
     {
+        float moveDistance = speed * Time.deltaTime;
+        CheckCollisions(moveDistance);
         transform.Translate(Vector3.forward * Time.deltaTime * speed);
     }
 }

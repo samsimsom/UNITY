@@ -9,6 +9,18 @@ public class PlayerController : MonoBehaviour
     private Rigidbody _playerRigidBody;
     private Vector3 _velocity;
 
+    private void Start()
+    {
+        _playerRigidBody = GetComponent<Rigidbody>();
+    }
+
+
+    private void FixedUpdate()
+    {
+        Vector3 newPosition = _playerRigidBody.position + 
+                              (_velocity * Time.fixedDeltaTime);
+        _playerRigidBody.MovePosition(newPosition);
+    }
     
     public void Move(Vector3 calculatedVelocity)
     {
@@ -22,16 +34,5 @@ public class PlayerController : MonoBehaviour
     }
     
     
-    void Start()
-    {
-        _playerRigidBody = GetComponent<Rigidbody>();
-    }
 
-
-    void FixedUpdate()
-    {
-        Vector3 newPosition = _playerRigidBody.position + 
-                              (_velocity * Time.fixedDeltaTime);
-        _playerRigidBody.MovePosition(newPosition);
-    }
 }
