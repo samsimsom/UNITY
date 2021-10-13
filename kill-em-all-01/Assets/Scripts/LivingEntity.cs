@@ -5,34 +5,42 @@ using UnityEngine;
 public class LivingEntity : MonoBehaviour, IDamageable
 {
     [SerializeField] private float startingHealth;
-    protected float health;
-    protected bool isDead;
+    protected float Health;
+    protected bool IsDead;
 
+    // Event Declaration
     public event System.Action OnDeath;
     
     protected virtual void Start()
     {
-        health = startingHealth;
+        Health = startingHealth;
     }
 
     
     public void TakeHit(float damage, RaycastHit hit)
     {
-        health -= damage;
+        // TODO: Do some stuff here with hit variable.
+        TakeDamage(damage);
+    }
 
-        if (health <= 0 && !isDead)
+    public void TakeDamage(float damage)
+    {
+        Health -= damage;
+
+        if (Health <= 0 && !IsDead)
         {
             Die();
         }
     }
-
+    
+    
     protected void Die()
     {
-        isDead = true;
+        IsDead = true;
         if (OnDeath != null)
         {
             OnDeath();
         }
-        GameObject.Destroy(gameObject);
+        Destroy(gameObject);
     }
 }

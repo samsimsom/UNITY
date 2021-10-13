@@ -5,58 +5,98 @@ using UnityEngine;
 using UnityEngine.AI;
 
 [RequireComponent(typeof(NavMeshAgent))]
-
 public class Enemy : LivingEntity
 {
-
     public enum State
     {
         Idle,
         Chasing,
         Attacking
     };
+
     private State currentState;
 
     private Material skinMaterial;
     private Color originalColor;
-    
+
     private NavMeshAgent pathFinder;
     private Transform target;
+
+    private LivingEntity targetEntity;
+    private bool hasTarget;
+
     private float attackDistanceThreshold = 0.5f;
     private float timeBetweenAttacks = 1.0f;
     private float nextAttackTime;
 
     private float myCollisionRadius;
     private float targetCollisionRadius;
-    
+
     protected override void Start()
     {
         base.Start();
+        // Enemy Navigation Mesh Componet
         pathFinder = GetComponent<NavMeshAgent>();
 
+        // Enemy Renderer.material Component
         skinMaterial = GetComponent<Renderer>().material;
+        // Enemy Orjinal color container
         originalColor = skinMaterial.color;
 
-        currentState = State.Chasing;
-        target = GameObject.FindGameObjectWithTag("Player").transform;
+        // Check Player GameObject in game! TODO: Hi!
+        if (GameObject.FindGameObjectWithTag("Player") != null)
+        {
+            // Enemy has a target (in this case target is Player)
+            hasTarget = true;
 
-        myCollisionRadius = GetComponent<CapsuleCollider>().radius;
-        targetCollisionRadius = target.GetComponent<CapsuleCollider>().radius;
+            // Enemy Current State set to Chasing
+            currentState = State.Chasing;
+            // Find Player and assign target variable
+            target = GameObject.FindGameObjectWithTag("Player").transform;
 
-        StartCoroutine(UpdatePath());
+            // Enemy to Player Vision
+            // Her bir Enemy Yaratildiginda target olarak Playeri goruyor.
+            targetEntity = target.GetComponent<LivingEntity>();
+            // OnDeath Event subscription
+            targetEntity.OnDeath += OnTargetDeath;
+
+            // Enemy Collision Radius
+            myCollisionRadius = GetComponent<CapsuleCollider>().radius;
+            // Player Collision Radius
+            targetCollisionRadius = target.GetComponent<CapsuleCollider>().radius;
+
+            // Enemt to Player Movement and Calulate Path Coroutine
+            StartCoroutine(UpdatePath());
+        }
     }
 
 
     private void Update()
     {
-        float sqrDstToTarget = (target.position - transform.position).sqrMagnitude;
-        if (sqrDstToTarget < Mathf.Pow(attackDistanceThreshold + 
-                                       myCollisionRadius +
-                                       targetCollisionRadius, 2))
+        if (hasTarget)
         {
-            nextAttackTime = Time.time + timeBetweenAttacks;
-            StartCoroutine(Attack());
+            if (Time.time > nextAttackTime)
+            {
+                float sqrDstToTarget = (target.position - 
+                                        transform.position).sqrMagnitude;
+
+                if (sqrDstToTarget < Mathf.Pow(attackDistanceThreshold +
+                                               myCollisionRadius +
+                                               targetCollisionRadius, 2))
+                {
+                    nextAttackTime = Time.time + timeBetweenAttacks;
+                    StartCoroutine(Attack());
+                }
+            }
         }
+    }
+
+
+    // Player Oldugu sirada tetiklenitor.
+    private void OnTargetDeath()
+    {
+        hasTarget = false;
+        currentState = State.Idle;
     }
 
 
@@ -64,7 +104,7 @@ public class Enemy : LivingEntity
     {
         currentState = State.Attacking;
         pathFinder.enabled = false;
-        
+
         Vector3 originalPosition = transform.position;
         Vector3 dirToTarget = (target.position - transform.position).normalized;
         Vector3 attackPosition = target.position - dirToTarget * (myCollisionRadius);
@@ -73,14 +113,14 @@ public class Enemy : LivingEntity
         float percent = 0;
 
         skinMaterial.color = Color.red;
-        
+
         while (percent <= 1)
         {
             percent += Time.deltaTime * attackSpeed;
             float interpolation = (-Mathf.Pow(percent, 2) + percent) * 4;
-            transform.position = Vector3.Lerp(originalPosition, 
+            transform.position = Vector3.Lerp(originalPosition,
                 attackPosition, interpolation);
-            
+
             yield return null;
         }
 
@@ -88,7 +128,7 @@ public class Enemy : LivingEntity
         currentState = State.Chasing;
         pathFinder.enabled = true;
     }
-    
+
 
     IEnumerator UpdatePath()
     {
@@ -100,17 +140,16 @@ public class Enemy : LivingEntity
             {
                 Vector3 dirToTarget = (target.position - transform.position).normalized;
                 // Vector3 targetPosition = new Vector3(target.position.x, 0, target.position.z);
-                Vector3 targetPosition = target.position - dirToTarget * 
+                Vector3 targetPosition = target.position - dirToTarget *
                     (myCollisionRadius + targetCollisionRadius + attackDistanceThreshold / 2);
-                
-                if (!isDead)
+
+                if (!IsDead)
                 {
                     pathFinder.SetDestination(targetPosition);
-
                 }
             }
+
             yield return new WaitForSeconds(refreshRate);
-            
         }
     }
 }

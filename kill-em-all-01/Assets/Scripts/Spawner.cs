@@ -18,7 +18,6 @@ public class Spawner : MonoBehaviour
     private void NextWave()
     {
         _currentWaveNumber++;
-        Debug.Log($"Wave: {_waves}");
         if (_currentWaveNumber - 1 < _waves.Length)
         {
             _currentWave = _waves[_currentWaveNumber - 1];
