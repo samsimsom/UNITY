@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,13 +6,26 @@ using UnityEngine;
 public class Projectile : MonoBehaviour
 {
     [SerializeField] private LayerMask collisionMask;
-    private float speed = 10.0f;
-    private float damage = 1.0f;
+    private float _speed = 10.0f;
+    private float _damage = 1.0f;
+    private float _lifeTime = 3.0f;
+    private float _skinWith = 0.1f;
 
-    
+    private void Start()
+    {
+        Destroy(gameObject, _lifeTime);
+
+        Collider[] initialCollisions = Physics.OverlapSphere(transform.position, 
+            0.1f, collisionMask);
+        if (initialCollisions.Length > 0)
+        {
+            OnHitObject(initialCollisions[0]);
+        }
+    }
+
     public void SetSpeed(float newSpeed)
     {
-        speed = newSpeed;
+        _speed = newSpeed;
     }
 
 
@@ -20,7 +34,7 @@ public class Projectile : MonoBehaviour
         Ray ray = new Ray(transform.position, transform.forward);
         RaycastHit hit;
 
-        if (Physics.Raycast(ray, out hit, movedistance, 
+        if (Physics.Raycast(ray, out hit, movedistance + _skinWith, 
             collisionMask, QueryTriggerInteraction.Collide))
         {
             OnHitObject(hit);
@@ -33,7 +47,18 @@ public class Projectile : MonoBehaviour
         IDamageable damageableObject = hit.collider.GetComponent<IDamageable>();
         if (damageableObject != null)
         {
-            damageableObject.TakeHit(damage, hit);
+            damageableObject.TakeHit(_damage, hit);
+        }
+        GameObject.Destroy(gameObject);
+    }
+    
+    
+    void OnHitObject(Collider collider)
+    {
+        IDamageable damageableObject = collider.GetComponent<IDamageable>();
+        if (damageableObject != null)
+        {
+            damageableObject.TakeDamage(_damage);
         }
         GameObject.Destroy(gameObject);
     }
@@ -41,8 +66,8 @@ public class Projectile : MonoBehaviour
     
     void Update()
     {
-        float moveDistance = speed * Time.deltaTime;
+        float moveDistance = _speed * Time.deltaTime;
         CheckCollisions(moveDistance);
-        transform.Translate(Vector3.forward * Time.deltaTime * speed);
+        transform.Translate(Vector3.forward * Time.deltaTime * _speed);
     }
 }

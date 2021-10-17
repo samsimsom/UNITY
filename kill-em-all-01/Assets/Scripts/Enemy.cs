@@ -27,6 +27,7 @@ public class Enemy : LivingEntity
 
     private float attackDistanceThreshold = 0.5f;
     private float timeBetweenAttacks = 1.0f;
+    private float damage = 1;
     private float nextAttackTime;
 
     private float myCollisionRadius;
@@ -113,9 +114,16 @@ public class Enemy : LivingEntity
         float percent = 0;
 
         skinMaterial.color = Color.red;
+        bool hasApplieDamage = false;
 
         while (percent <= 1)
         {
+            if (percent >= 0.5f && !hasApplieDamage)
+            {
+                hasApplieDamage = true;
+                targetEntity.TakeDamage(damage);
+            }
+            
             percent += Time.deltaTime * attackSpeed;
             float interpolation = (-Mathf.Pow(percent, 2) + percent) * 4;
             transform.position = Vector3.Lerp(originalPosition,
@@ -134,7 +142,7 @@ public class Enemy : LivingEntity
     {
         float refreshRate = 0.25f;
 
-        while (target != null)
+        while (hasTarget)
         {
             if (currentState == State.Chasing)
             {

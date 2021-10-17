@@ -249,9 +249,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _waves:
-  - enemyCount: 3
+  - enemyCount: 1
     timeBetweenSpawns: 2
-  - enemyCount: 2
+  - enemyCount: 1
     timeBetweenSpawns: 1
   _enemy: {fileID: 7367931062352645539, guid: b51ac86fff7d8914c93a0a448582fdae, type: 3}
 --- !u!4 &481506894
@@ -664,8 +664,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f78a21d56d34144aa2c2e82f7d6f83b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _target: {fileID: 1770425398}
-  _smoothSpeed: 1.25
+  target: {fileID: 1770425398}
+  smoothSpeed: 2
 --- !u!1 &1770425394
 GameObject:
   m_ObjectHideFlags: 0

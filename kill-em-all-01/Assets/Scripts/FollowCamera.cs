@@ -5,15 +5,18 @@ using UnityEngine;
 
 public class FollowCamera : MonoBehaviour
 {
-    [SerializeField] private Transform _target;
-    [SerializeField] [Range(0.01f, 2.0f)] private float _smoothSpeed = 2.0f;
-    
-    
+    [SerializeField] private Transform target;
+    [SerializeField] [Range(0.01f, 2.0f)] private float smoothSpeed = 2.0f;
+
+
     void FixedUpdate()
     {
-        Vector3 desirePosition = _target.position;
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, 
-            desirePosition, _smoothSpeed * Time.fixedDeltaTime);
-        transform.position = smoothedPosition;
+        if (target != null)
+        {
+            Vector3 desirePosition = target.position;
+            Vector3 smoothedPosition = Vector3.Lerp(transform.position, 
+                desirePosition, smoothSpeed * Time.fixedDeltaTime);
+            transform.position = smoothedPosition;
+        }
     }
 }

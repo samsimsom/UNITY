@@ -23,6 +23,7 @@ public class LivingEntity : MonoBehaviour, IDamageable
         TakeDamage(damage);
     }
 
+    
     public void TakeDamage(float damage)
     {
         Health -= damage;
