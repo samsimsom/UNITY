@@ -22,7 +22,7 @@ public class MapGenerator : MonoBehaviour
             DestroyImmediate(transform.Find(holderName).gameObject);
         }
 
-        // holderName degiskenin sakladigi isim ile bir adet
+        // holderName degiskenin sakladigi isim ile bir adet.
         // gameObjesi yaratiliyor - mapHolder.
         // mapHolder scriptin bagli oldugu Map objesine parant oluyor.
         Transform mapHolder = new GameObject(holderName).transform;
