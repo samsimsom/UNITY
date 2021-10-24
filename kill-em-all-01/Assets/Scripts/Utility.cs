@@ -6,7 +6,7 @@ public static class Utility
 {
     public static T[] ShuffleArray<T>(T[] array, int seed)
     {
-        Random prng = new Random();
+        Random prng = new Random(seed);
 
         for (int i = 0; i < array.Length -1 ; i++)
         {
