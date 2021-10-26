@@ -22,6 +22,8 @@ public class MapGenerator : MonoBehaviour
 
     // obstacle percent
     [SerializeField] [Range(0.0f, 1.0f)] private float obstaclePercent;
+    
+    [SerializeField] [Range(0.1f, 10.0f)] private float tileSize;
 
     private List<Coord> allTileCoords;
     private Queue<Coord> shuffledTileCoords;
@@ -66,7 +68,7 @@ public class MapGenerator : MonoBehaviour
                 Quaternion tileRotation = Quaternion.Euler(Vector3.right * 90);
                 Transform newTile = Instantiate(tilePrefab, tilePosition,
                     tileRotation) as Transform;
-                newTile.localScale = Vector3.one * (1 - outlinePercent);
+                newTile.localScale = Vector3.one * (1 - outlinePercent) * tileSize;
                 // yeni yaratilan her bir tile Map - Ganerated Map altina
                 // parentleniyor.
                 newTile.parent = mapHolder;
@@ -94,6 +96,7 @@ public class MapGenerator : MonoBehaviour
                     Quaternion.identity) as Transform;
 
                 newObstacle.parent = mapHolder;
+                newObstacle.localScale = Vector3.one * (1 - outlinePercent) * tileSize;
             }
             else
             {
@@ -156,7 +159,7 @@ public class MapGenerator : MonoBehaviour
         float tileX = -mapSize.x / 2 + 0.5f + x;
         float tileY = -mapSize.y / 2 + 0.5f + y;
 
-        return new Vector3(tileX, 0, tileY);
+        return new Vector3(tileX, 0, tileY) * tileSize;
     }
 
 
