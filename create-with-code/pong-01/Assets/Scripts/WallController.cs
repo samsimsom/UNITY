@@ -8,7 +8,7 @@ public class WallController : MonoBehaviour
 
     void Start()
     {
-        MaxWallSize = 4.0f;
+        MaxWallSize = 1.0f;
         transform.localScale += Vector3.up * MaxWallSize;
     }
     
