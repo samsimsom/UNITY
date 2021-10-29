@@ -21,7 +21,22 @@ public class Ball : MonoBehaviour
     }
 
 
-    public void CalculateSpeedModifier()
+    private void PositionBall(bool player)
+    {
+        _rigidbody2D.velocity = Vector2.zero;
+
+        if (player)
+        {
+            transform.position = Vector3.left;
+        }
+        else
+        {
+            transform.position = Vector3.right;
+        }
+    }
+    
+    
+    public void IncreaseSpeedModifier() 
     {
         if (_hitCounter + speedModifier <= maxSpeed)
         {
@@ -31,16 +46,18 @@ public class Ball : MonoBehaviour
 
     public IEnumerator StartBallMove(bool isStartingPlayer1 = true)
     {
+        PositionBall(isStartingPlayer1);
+        
         _hitCounter = 0;
         yield return new WaitForSeconds(2);
 
         if (isStartingPlayer1)
         {
-            MoveBall(new Vector2(-1, 0));
+            MoveBall(new Vector2(-1.0f, 0.0f));
         }
         else
         {
-            MoveBall(new Vector2(1, 0));
+            MoveBall(new Vector2(1.0f, 0.0f));
         }
     }
 
