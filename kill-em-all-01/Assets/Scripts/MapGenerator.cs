@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Serialization;
@@ -35,7 +36,19 @@ public class MapGenerator : MonoBehaviour
 
     public void GenerateMap()
     {
-        currentMap = maps[mapIndex];
+        try
+        {
+            currentMap = maps[mapIndex];
+        }
+        catch (IndexOutOfRangeException e)
+        {
+            int lastIndex = Array.LastIndexOf(maps, maps.Last());
+            currentMap = maps.Last();
+            mapIndex = lastIndex;
+            
+            Debug.Log($"Map Index was Fixed!");
+        }
+        
         Random rnd = new Random(currentMap.seed);
         
         allTileCoords = new List<Coord>();
@@ -114,6 +127,16 @@ public class MapGenerator : MonoBehaviour
                     (1 - outlinePercent) * tileSize,
                     obstacleHeight, 
                     (1 - outlinePercent) * tileSize);
+                
+                // Obstacle Color
+                Renderer obstacleRenderer = newObstacle.transform.GetChild(0).GetComponent<Renderer>();
+                Material obstacleMaterial = new Material(obstacleRenderer.sharedMaterial);
+                float colorPercent = randomCoord.y / (float)currentMap.mapSize.y;
+                obstacleMaterial.color = Color.Lerp(
+                    currentMap.foregroundColor, 
+                    currentMap.backgrodunColor, 
+                    colorPercent);
+                obstacleRenderer.sharedMaterial = obstacleMaterial;
             }
             else
             {
