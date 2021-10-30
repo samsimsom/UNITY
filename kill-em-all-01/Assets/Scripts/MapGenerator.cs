@@ -63,9 +63,6 @@ public class MapGenerator : MonoBehaviour
         shuffledTileCoords = new Queue<Coord>(
             Utility.ShuffleArray(allTileCoords.ToArray(), currentMap.seed));
         
-        // tile map center
-        // mapCenter = new Coord((int)(currentMap.mapSize.x / 2), (int)(currentMap.mapSize.y / 2));
-
         string holderName = "Generated Map";
         if (transform.Find(holderName))
         {
