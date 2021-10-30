@@ -166,7 +166,9 @@ public class MapGenerator : MonoBehaviour
     private void NavMeshGenerator()
     {
         // navmesh size fix with map size
-        navMesh.localScale = Vector3.one * tileSize;
+        // navMesh.localScale = Vector3.one * tileSize;
+        navMesh.localScale = new Vector3((mapSize.x * tileSize)/10.0f,
+            1.0f, (mapSize.y * tileSize)/10.0f);
         navMeshSurface.BuildNavMesh();
     }
     
