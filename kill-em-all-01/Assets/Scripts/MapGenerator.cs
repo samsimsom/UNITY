@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 
 
 public class MapGenerator : MonoBehaviour
@@ -24,6 +25,10 @@ public class MapGenerator : MonoBehaviour
     [SerializeField] [Range(0.0f, 1.0f)] private float obstaclePercent;
     
     [SerializeField] [Range(0.1f, 10.0f)] private float tileSize;
+    
+    // Navigation Mesh Ground
+    [SerializeField] private NavMeshSurface navMeshSurface;
+    [SerializeField] private Transform navMesh;
 
     private List<Coord> allTileCoords;
     private Queue<Coord> shuffledTileCoords;
@@ -32,6 +37,8 @@ public class MapGenerator : MonoBehaviour
 
     public void GenerateMap()
     {
+        NavMeshGenerator();
+        
         allTileCoords = new List<Coord>();
         for (int x = 0; x < mapSize.x; x++)
         {
@@ -91,11 +98,12 @@ public class MapGenerator : MonoBehaviour
             {
                 Vector3 obstaclePosition = CoordToPosition(randomCoord.X, randomCoord.Y);
 
-                Transform newObstacle = Instantiate(obstaclePrefab,
-                    obstaclePosition + Vector3.up * 0.5f,
+                // Obstacle Position
+                Transform newObstacle = Instantiate(obstaclePrefab, obstaclePosition,
                     Quaternion.identity) as Transform;
 
                 newObstacle.parent = mapHolder;
+                // Obstacle Scale
                 newObstacle.localScale = Vector3.one * (1 - outlinePercent) * tileSize;
             }
             else
@@ -137,7 +145,8 @@ public class MapGenerator : MonoBehaviour
                             && neighbourY >= 0 
                             && neighbourY < obstacleMap.GetLength(1))
                         {
-                            if (!mapFlags[neighbourX, neighbourY] && !obstacleMap[neighbourX, neighbourY])
+                            if (!mapFlags[neighbourX, neighbourY] && 
+                                !obstacleMap[neighbourX, neighbourY])
                             {
                                 mapFlags[neighbourX, neighbourY] = true;
                                 queue.Enqueue(new Coord(neighbourX, neighbourY));
@@ -152,8 +161,16 @@ public class MapGenerator : MonoBehaviour
         int targetAccessibleTileCount = (int)(mapSize.x * mapSize.y - currentObstacleCount);
         return targetAccessibleTileCount == accessibleTileCount;
     }
-    
 
+
+    private void NavMeshGenerator()
+    {
+        // navmesh size fix with map size
+        navMesh.localScale = Vector3.one * tileSize;
+        navMeshSurface.BuildNavMesh();
+    }
+    
+    
     Vector3 CoordToPosition(int x, int y)
     {
         float tileX = -mapSize.x / 2 + 0.5f + x;
