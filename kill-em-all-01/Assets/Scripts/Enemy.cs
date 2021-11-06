@@ -41,6 +41,7 @@ public class Enemy : LivingEntity
 
         // Enemy Renderer.material Component
         skinMaterial = GetComponent<Renderer>().material;
+        
         // Enemy Orjinal color container
         originalColor = skinMaterial.color;
 

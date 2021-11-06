@@ -30,8 +30,11 @@ public class MapGenerator : MonoBehaviour
 
     private List<Coord> allTileCoords;
     private Queue<Coord> shuffledTileCoords;
+    private Queue<Coord> shuffledOpenTileCoord;
 
     private Map currentMap;
+
+    private Transform[,] _tileMap;
 
 
     public void GenerateMap()
@@ -39,6 +42,7 @@ public class MapGenerator : MonoBehaviour
         try
         {
             currentMap = maps[mapIndex];
+            _tileMap = new Transform[currentMap.mapSize.x, currentMap.mapSize.y];
         }
         catch (IndexOutOfRangeException e)
         {
@@ -46,11 +50,12 @@ public class MapGenerator : MonoBehaviour
             currentMap = maps.Last();
             mapIndex = lastIndex;
             
-            Debug.Log($"Map Index was Fixed!");
+            Debug.Log($"Map Index was Fixed! {e}");
         }
         
         Random rnd = new Random(currentMap.seed);
         
+        // Generating Coords
         allTileCoords = new List<Coord>();
         for (int x = 0; x < currentMap.mapSize.x; x++)
         {
@@ -63,6 +68,7 @@ public class MapGenerator : MonoBehaviour
         shuffledTileCoords = new Queue<Coord>(
             Utility.ShuffleArray(allTileCoords.ToArray(), currentMap.seed));
         
+        // Create map holder object
         string holderName = "Generated Map";
         if (transform.Find(holderName))
         {
@@ -75,7 +81,7 @@ public class MapGenerator : MonoBehaviour
         Transform mapHolder = new GameObject(holderName).transform;
         mapHolder.parent = transform;
 
-        // tile loop
+        // Spawning Tiles
         for (int x = 0; x < currentMap.mapSize.x; x++) // row
         {
             for (int y = 0; y < currentMap.mapSize.y; y++) // column
@@ -88,6 +94,8 @@ public class MapGenerator : MonoBehaviour
                 // yeni yaratilan her bir tile Map - Ganerated Map altina
                 // parentleniyor.
                 newTile.parent = mapHolder;
+
+                _tileMap[x, y] = newTile;
             }
         }
 
@@ -96,7 +104,8 @@ public class MapGenerator : MonoBehaviour
 
         int obstacleCount = (int)(currentMap.mapSize.x * currentMap.mapSize.y * currentMap.obstaclePercent);
         int currentObstacleCount = 0;
-        
+        List<Coord> allOpenCoords = new List<Coord>(allTileCoords);
+
         for (int i = 0; i < obstacleCount; i++)
         {
             Coord randomCoord = GetRandomCoord();
@@ -134,6 +143,8 @@ public class MapGenerator : MonoBehaviour
                     currentMap.backgrodunColor, 
                     colorPercent);
                 obstacleRenderer.sharedMaterial = obstacleMaterial;
+
+                allOpenCoords.Remove(randomCoord);
             }
             else
             {
@@ -141,6 +152,9 @@ public class MapGenerator : MonoBehaviour
                 currentObstacleCount--;
             }
         }
+        
+        shuffledOpenTileCoord = new Queue<Coord>(
+            Utility.ShuffleArray(allOpenCoords.ToArray(), currentMap.seed));
         
         NavMeshGenerator();
 
@@ -190,7 +204,8 @@ public class MapGenerator : MonoBehaviour
             }
         }
 
-        int targetAccessibleTileCount = (int)(currentMap.mapSize.x * currentMap.mapSize.y - currentObstacleCount);
+        int targetAccessibleTileCount = (int)(currentMap.mapSize.x * 
+            currentMap.mapSize.y - currentObstacleCount);
         return targetAccessibleTileCount == accessibleTileCount;
     }
 
@@ -212,6 +227,19 @@ public class MapGenerator : MonoBehaviour
         return new Vector3(tileX, 0, tileY) * tileSize;
     }
 
+
+    public Transform GetTileFromPosition(Vector3 position)
+    {
+        int x = Mathf.RoundToInt(position.x / tileSize + 
+                                 (currentMap.mapSize.x - 1) / 2f);
+        int y = Mathf.RoundToInt(position.z / tileSize + 
+                                 (currentMap.mapSize.y - 1) / 2f);
+        x = Mathf.Clamp(x, 0, _tileMap.GetLength(0) - 1);
+        y = Mathf.Clamp(y, 0, _tileMap.GetLength(1) - 1);
+        
+        return _tileMap[x, y];
+    }
+    
     
     public Coord GetRandomCoord()
     {
@@ -222,6 +250,15 @@ public class MapGenerator : MonoBehaviour
     }
 
 
+    public Transform GetRandomOpenTile()
+    {
+        Coord randomCoord = shuffledOpenTileCoord.Dequeue();
+        shuffledOpenTileCoord.Enqueue(randomCoord);
+        
+        return _tileMap[randomCoord.x, randomCoord.y];
+    }
+    
+    
     #pragma warning disable CS0660, CS0661
     [Serializable]
     public struct Coord
