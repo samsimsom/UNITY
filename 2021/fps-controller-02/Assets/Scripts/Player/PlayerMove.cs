@@ -1,8 +1,11 @@
+using System;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class PlayerMove : MonoBehaviour
 {
-    [SerializeField] private MoveSettings _settings = null;
+    [FormerlySerializedAs("_settings")] 
+    [SerializeField] private MoveSettings settings = null;
 
     private Vector3 _moveDirection;
     private CharacterController _controller;
@@ -26,16 +29,18 @@ public class PlayerMove : MonoBehaviour
     {
         if (_controller.isGrounded)
         {
-            Vector2 input = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
+            float inputX = Input.GetAxis("Horizontal");
+            float inpuyY = Input.GetAxis("Vertical");
+            Vector2 input = new Vector2(inputX, inpuyY);
 
             if (input.x != 0 && input.y != 0)
             {
                 input *= 0.777f;
             }
 
-            _moveDirection.x = input.x * _settings.speed;
-            _moveDirection.z = input.y * _settings.speed;
-            _moveDirection.y = -_settings.antiBump;
+            _moveDirection.x = input.x * settings.speed;
+            _moveDirection.z = input.y * settings.speed;
+            _moveDirection.y = -settings.antiBump;
 
             _moveDirection = transform.TransformDirection(_moveDirection);
 
@@ -46,12 +51,18 @@ public class PlayerMove : MonoBehaviour
         }
         else
         {
-            _moveDirection.y -= _settings.gravity * Time.deltaTime;
+            _moveDirection.y -= settings.gravity * Time.deltaTime;
         }
     }
 
     private void Jump()
     {
-        _moveDirection.y += _settings.jumpForce;
+        _moveDirection.y += settings.jumpForce;
     }
+
+    // private void OnControllerColliderHit(ControllerColliderHit hit)
+    // {
+    //     Debug.Log(hit.normal);
+    // }
+    
 }
