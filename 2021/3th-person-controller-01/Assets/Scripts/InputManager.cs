@@ -19,9 +19,12 @@ public class InputManager : MonoBehaviour
     [HideInInspector] public float cameraInputY;
     
 
-    private float _moveAmount;
+    [HideInInspector] public float moveAmount;
+    private PlayerLocomotion _playerLocomotion;
     private PlayerControls _playerControls;
     private AnimatorManager _animatorManager;
+
+    [ShowOnly] public bool sprintInput;
     
     // -------------------------------------------------------------------------
     #endregion
@@ -40,6 +43,12 @@ public class InputManager : MonoBehaviour
             // Camera input girdilerini okuyor ve cameraInputa aktariyor
             _playerControls.PlayerMovements.Camera.performed +=
                 i => cameraInput = i.ReadValue<Vector2>();
+            
+            // Player Actions Inputs
+            _playerControls.PlayerActions.Sprinting.performed += 
+                i => sprintInput = true;
+            _playerControls.PlayerActions.Sprinting.canceled +=
+                i => sprintInput = false;
         }
         
         _playerControls.Enable();
@@ -55,12 +64,14 @@ public class InputManager : MonoBehaviour
     private void Awake()
     {
         _animatorManager = GetComponent<AnimatorManager>();
+        _playerLocomotion = GetComponent<PlayerLocomotion>();
     }
 
 
     public void HandleAllInputs()
     {
         HandleMovementInput();
+        HandleSprintingInput();
         HandleCameraInput();
     }
     
@@ -70,13 +81,26 @@ public class InputManager : MonoBehaviour
         verticalInput = movementInput.y;
         horizontalInput = movementInput.x;
 
-        _moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + 
+        moveAmount = Mathf.Clamp01(Mathf.Abs(horizontalInput) + 
                                     Mathf.Abs(verticalInput));
         _animatorManager.UpdateAnimatorValues(0, 
-            _moveAmount);
+            moveAmount, _playerLocomotion.isSprinting);
     }
 
 
+    private void HandleSprintingInput()
+    {
+        if (sprintInput && moveAmount > 0.5f)
+        {
+            _playerLocomotion.isSprinting = true;
+        }
+        else
+        {
+            _playerLocomotion.isSprinting = false;
+        }
+    }
+    
+    
     private void HandleCameraInput()
     {
         cameraInputY = cameraInput.y;

@@ -8,9 +8,13 @@ public class PlayerLocomotion : MonoBehaviour
 {
     #region Class Variables
     // -------------------------------------------------------------------------
-    
-    public float movementSpeed = 7f;
+    [Header("Movement Speeds")]
+    public float walkingSpeed = 1.5f;
+    public float runningSpeed = 5f;
+    public float sprintingSpeed = 7f;
     public float rotationSpeed = 15f;
+
+    [HideInInspector] public bool isSprinting;
     
     private InputManager _inputManager;
     private Transform _cameraObject;
@@ -41,7 +45,23 @@ public class PlayerLocomotion : MonoBehaviour
             _inputManager.horizontalInput;
         _moveDirection.Normalize();
         _moveDirection.y = 0f;
-        _moveDirection *= movementSpeed;
+
+        if (isSprinting)
+        {
+            _moveDirection *= sprintingSpeed;
+        }
+        else
+        {
+            if (_inputManager.moveAmount >= 0.5f)
+            {
+                // _moveDirection = _moveDirection * runningSpeed;
+                _moveDirection *= runningSpeed;
+            }
+            else
+            {
+                _moveDirection = _moveDirection * walkingSpeed;
+            }
+        }
         
         Vector3 movementVelocity = _moveDirection;
         _playerRigidbody.velocity = movementVelocity;

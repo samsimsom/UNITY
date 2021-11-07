@@ -9,7 +9,8 @@ public class AnimatorManager : MonoBehaviour
     private int _horizontal;
     private int _vertical;
     
-    public void UpdateAnimatorValues(float horizontalMovement, float verticalMovement)
+    public void UpdateAnimatorValues(float horizontalMovement, 
+        float verticalMovement, bool isSprinting)
     {
         // Animation Snapping
         float snappedHorizontal;
@@ -62,9 +63,18 @@ public class AnimatorManager : MonoBehaviour
         }    
         
         #endregion
+
+
+        if (isSprinting)
+        {
+            snappedHorizontal = horizontalMovement;
+            snappedVertical = 2;
+        }
         
-        _animator.SetFloat(_horizontal, snappedHorizontal, 0.1f, Time.deltaTime);
-        _animator.SetFloat(_vertical, snappedVertical, 0.1f, Time.deltaTime);
+        _animator.SetFloat(_horizontal, snappedHorizontal, 
+            0.1f, Time.deltaTime);
+        _animator.SetFloat(_vertical, snappedVertical, 
+            0.1f, Time.deltaTime);
     }
 
 

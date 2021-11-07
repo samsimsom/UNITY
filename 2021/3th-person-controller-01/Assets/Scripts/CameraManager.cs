@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class CameraManager : MonoBehaviour
@@ -9,9 +10,9 @@ public class CameraManager : MonoBehaviour
     [HideInInspector] public float pivotAngle;
     public Transform cameraPivot;
 
+    [SerializeField] private LayerMask collisionLayers;
     [SerializeField] private float minCollisionOffset = 0.2f;
     [SerializeField] private float cameraCollisionOffset = 0.2f;
-    [SerializeField] private LayerMask collisionLayers;
     [SerializeField] private float cameraFollowSpeed = 0.2f;
     [SerializeField] private float cameraLookSpeed = 0.2f;
     [SerializeField] private float cameraPivotSpeed = 0.2f;
@@ -24,13 +25,18 @@ public class CameraManager : MonoBehaviour
     private Transform _cameraTransform;
     private Vector3 _cameraFollowVelocity = Vector3.zero;
     private float _defaultPosition;
-    private Vector3 cameraVectorPosition;
+    private Vector3 _cameraVectorPosition;
 
 
     public void HandleAllCameraMovement()
     {
         FollowTarget();
         RotateCamere();
+    }
+
+
+    public void HandleCameraCollisionUpdate()
+    {
         HandleCameraCollisions();
     }
     
@@ -64,7 +70,7 @@ public class CameraManager : MonoBehaviour
         targetRotation = Quaternion.Euler(rotation);
         cameraPivot.localRotation = targetRotation;
     }
-
+    
 
     private void HandleCameraCollisions()
     {
@@ -78,17 +84,17 @@ public class CameraManager : MonoBehaviour
             Mathf.Abs(targetPosition), collisionLayers))
         {
             float distance = Vector3.Distance(cameraPivot.position, hit.point);
-            targetPosition =- (distance - cameraCollisionOffset);
+            targetPosition = -(distance - cameraCollisionOffset);
         }
 
         if (Mathf.Abs(targetPosition) < minCollisionOffset)
         {
-            targetPosition = targetPosition - minCollisionOffset;
+            targetPosition -= minCollisionOffset;
         }
 
-        cameraVectorPosition.z = Mathf.Lerp(_cameraTransform.localPosition.z,
+        _cameraVectorPosition.z = Mathf.Lerp(_cameraTransform.localPosition.z,
             targetPosition, 0.2f);
-        _cameraTransform.localPosition = cameraVectorPosition;
+        _cameraTransform.localPosition = _cameraVectorPosition;
     }
     
     

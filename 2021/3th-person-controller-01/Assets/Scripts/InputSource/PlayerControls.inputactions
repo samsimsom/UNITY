@@ -200,6 +200,33 @@
                     "isPartOfComposite": true
                 }
             ]
+        },
+        {
+            "name": "PlayerActions",
+            "id": "7004b3a4-ce20-45ff-91a2-a475d753b287",
+            "actions": [
+                {
+                    "name": "Sprinting",
+                    "type": "Button",
+                    "id": "699dc416-b2fc-41af-8fd4-c05b6faf852e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "3bfcadbc-61b6-40ea-9802-5d1de51c327d",
+                    "path": "<Keyboard>/shift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Sprinting",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": []
