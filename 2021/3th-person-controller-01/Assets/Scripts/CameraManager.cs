@@ -27,6 +27,7 @@ public class CameraManager : MonoBehaviour
     private float _defaultPosition;
     private Vector3 _cameraVectorPosition;
 
+    private RaycastHit _cameraRayHit;
 
     public void HandleAllCameraMovement()
     {
@@ -85,6 +86,8 @@ public class CameraManager : MonoBehaviour
         {
             float distance = Vector3.Distance(cameraPivot.position, hit.point);
             targetPosition = -(distance - cameraCollisionOffset);
+            
+            _cameraRayHit = hit;
         }
 
         if (Mathf.Abs(targetPosition) < minCollisionOffset)
@@ -106,6 +109,13 @@ public class CameraManager : MonoBehaviour
         _targetTransform = FindObjectOfType<PlayerManager>().transform;
         _cameraTransform = Camera.main.transform;
         _defaultPosition = _cameraTransform.localPosition.z;
+    }
+    
+    
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(_cameraVectorPosition, 0.5f);
+        Gizmos.DrawWireSphere(_cameraRayHit.point, 0.2f);
     }
     
     // -------------------------------------------------------------------------
