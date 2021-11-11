@@ -10,6 +10,8 @@ public class ExplosiveBarrel : MonoBehaviour
     // [SerializeField] private float damage = 10;
     [SerializeField] private Color color = Color.red;
 
+    private static readonly int SHPropColor = Shader.PropertyToID("_Color");
+    
     private MaterialPropertyBlock _mpb;
     public MaterialPropertyBlock Mpb
     {
@@ -23,13 +25,28 @@ public class ExplosiveBarrel : MonoBehaviour
 
     private void ApplyColor()
     {
-        
+        MeshRenderer rnd = GetComponent<MeshRenderer>();
+        Mpb.SetColor(SHPropColor, color);
+        rnd.SetPropertyBlock(Mpb);
+    }
+
+    
+    // Degisen deger oldugunda calisan muthis method.
+    // Editor-only function that Unity calls when the script is
+    // loaded or a value changes in the Inspector.
+    private void OnValidate()
+    {
+        ApplyColor();
     }
 
 
     // Obje aktif oldugunda kendini listeye ekliyor.
-    private void OnEnable() => 
+    private void OnEnable()
+    {
+        ApplyColor();
         ExplosiveBarrelManager.AllBarrels.Add(this);
+    }
+
     
     // obje inaktif olduguunda kendini listeden cikartiyor.
     private void OnDisable() => 
