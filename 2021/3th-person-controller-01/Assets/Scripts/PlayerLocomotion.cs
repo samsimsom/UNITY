@@ -116,4 +116,16 @@ public class PlayerLocomotion : MonoBehaviour
     // -------------------------------------------------------------------------
     #endregion
 
+    public void Test()
+    {
+        float number = 1;
+        int calcul = 23;
+        for (int i = 0; i < number; i++)
+        {
+            Debug.Log(i);
+        }
+
+        Vector3 test = new Vector3(calcul, number, 23f);
+        
+    }
 }
