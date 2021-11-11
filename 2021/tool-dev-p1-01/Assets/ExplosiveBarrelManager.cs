@@ -25,7 +25,7 @@ public class ExplosiveBarrelManager : MonoBehaviour
             Vector3 barrelSize = barrel.GetComponent<Renderer>().bounds.size;
             Vector3 barrelTopPosition = new Vector3(
                 barrel.transform.position.x,
-                (barrel.transform.position.y + barrelSize.y * 0.5f) + 0.5f,
+                (barrel.transform.position.y + barrelSize.y * 0.5f) + 2.5f,
                 barrel.transform.position.z
             );
 

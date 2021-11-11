@@ -10,34 +10,20 @@ public class ExplosiveBarrel : MonoBehaviour
     // [SerializeField] private float damage = 10;
     [SerializeField] private Color color = Color.red;
 
-
-    private void Awake()
+    private MaterialPropertyBlock _mpb;
+    public MaterialPropertyBlock Mpb
     {
-        // Editor tarafinda yapilan degisikliklerin pekcogunun
-        // oyun icini etkilememesi gerekir.
-        // Malzeme degistirme vb. gibi durumlar ile karsilasildiginda 
-        // en guzel cozumlerden biri. Yeni malzemeyi burda yaratmak
-        // ve HideFlags kullanarak kaydedilmesini engellemek.
+        get
+        {
+            if (_mpb  == null)
+                _mpb = new MaterialPropertyBlock();
+            return _mpb;
+        }
+    }
 
-        Shader shader = Shader.Find("Default/Diffuse");
-        Material mat = new Material(shader);
-        mat.hideFlags = HideFlags.HideAndDontSave;
-
-        GetComponent<Transform>().hideFlags = HideFlags.HideInInspector;
+    private void ApplyColor()
+    {
         
-        // Bu sekilde material erisimi yaptiginda,
-        // unity malarialin bir kopyasini olusturu ve onu editleyip objeye atar.
-        // orjinal material degisltirilmez.
-        // will duplicate the material (dusuk performans)
-        // GetComponent<MeshRenderer>().material.color = color;
-
-        // Orjinal material assetini degistirir.
-        // will modify the asset.
-        GetComponent<MeshRenderer>().sharedMaterial.color = color;
-        
-        // bu duruma benzer bir konu MeshFilter icindir.
-        // GetComponent<MeshFilter>().sharedMesh
-        // GetComponent<MeshFilter>().mesh
     }
 
 
