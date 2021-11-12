@@ -11,6 +11,7 @@ using UnityEditor;
 public class ExplosiveBarrelManager : MonoBehaviour
 {
     public static List<ExplosiveBarrel> AllBarrels = new List<ExplosiveBarrel>();
+    [SerializeField] [Range(0f, 5f)] private float textOffset;
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
@@ -25,12 +26,11 @@ public class ExplosiveBarrelManager : MonoBehaviour
             Vector3 barrelSize = barrel.GetComponent<Renderer>().bounds.size;
             Vector3 barrelTopPosition = new Vector3(
                 barrel.transform.position.x,
-                (barrel.transform.position.y + barrelSize.y * 0.5f) + 2.5f,
+                (barrel.transform.position.y + barrelSize.y * 0.5f) + textOffset,
                 barrel.transform.position.z
             );
-
-
             Handles.Label(barrelTopPosition, "Barrel");
+            
             Handles.DrawBezier(
                 managerPos,
                 barrelPos,
