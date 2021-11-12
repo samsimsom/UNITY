@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [ExecuteAlways]
@@ -52,10 +53,14 @@ public class ExplosiveBarrel : MonoBehaviour
     private void OnDisable() => 
         ExplosiveBarrelManager.AllBarrels.Remove(this);
     
+    
     // Gizmolari herzaman ciziyor.
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(transform.position, radius);
+        // Gizmos.DrawWireSphere(transform.position, radius);
+        Handles.color = color;
+        Handles.DrawWireDisc(transform.position, Vector3.up, radius);
+        Handles.color = Color.white;
     }
 
 
