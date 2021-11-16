@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -16,6 +17,11 @@ public class ExplosiveBarrelManager : MonoBehaviour
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
+        // Handles icin display secenekleri.
+        Handles.zTest = CompareFunction.LessEqual;
+        
+        // Debug.Log(AllBarrels.Count);
+        
         foreach (ExplosiveBarrel barrel in AllBarrels)
         {
             Vector3 managerPos = transform.position;
