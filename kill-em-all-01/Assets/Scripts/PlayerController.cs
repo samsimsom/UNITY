@@ -19,7 +19,9 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 newPosition = _playerRigidBody.position + 
                               (_velocity * Time.fixedDeltaTime);
-        _playerRigidBody.MovePosition(newPosition);
+        // _playerRigidBody.MovePosition(newPosition);
+        _playerRigidBody.AddForce(_velocity);
+
     }
     
     public void Move(Vector3 calculatedVelocity)
