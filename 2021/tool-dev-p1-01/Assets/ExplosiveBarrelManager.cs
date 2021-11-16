@@ -12,44 +12,34 @@ using UnityEditor;
 public class ExplosiveBarrelManager : MonoBehaviour
 {
     public static List<ExplosiveBarrel> AllBarrels = new List<ExplosiveBarrel>();
-    [SerializeField] [Range(0f, 5f)] private float textOffset;
 
 #if UNITY_EDITOR
     private void OnDrawGizmos()
     {
         // Handles icin display secenekleri.
         Handles.zTest = CompareFunction.LessEqual;
-        
-        // Debug.Log(AllBarrels.Count);
-        
+
+        // List icerisindeki elementlerin herbiri icin
+        // calistirilan islemeler.
         foreach (ExplosiveBarrel barrel in AllBarrels)
         {
             Vector3 managerPos = transform.position;
             Vector3 barrelPos = barrel.transform.position;
             float halfHeiht = (managerPos.y - barrelPos.y) * 0.5f;
             Vector3 offset = Vector3.up * halfHeiht;
-
-            Vector3 barrelSize = barrel.GetComponent<Renderer>().bounds.size;
-            Vector3 barrelTopPosition = new Vector3(
-                barrel.transform.position.x,
-                (barrel.transform.position.y + barrelSize.y * 0.5f) + textOffset,
-                barrel.transform.position.z
-            );
-            Handles.Label(barrelTopPosition, "Barrel");
             
             Handles.DrawBezier(
                 managerPos,
                 barrelPos,
                 (managerPos - offset),
                 (barrelPos + offset),
-                Color.red,
+                barrel.type.color,
                 EditorGUIUtility.whiteTexture,
                 1f
             );
 
             Handles.DrawAAPolyLine(transform.position,
                 barrel.transform.position);
-
             /*
             Gizmos.DrawLine(transform.position, barrel.transform.position);
             */
