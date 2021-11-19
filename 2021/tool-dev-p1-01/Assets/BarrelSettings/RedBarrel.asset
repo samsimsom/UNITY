@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e81d46fcaca1c094cba28c61eacf0c14, type: 3}
   m_Name: RedBarrel
   m_EditorClassIdentifier: 
-  radius: 3.72
+  radius: 4.07
   damage: 10
-  color: {r: 0.6981132, g: 0.1377855, b: 0, a: 1}
+  color: {r: 0.7735849, g: 0.16111997, b: 0.10634186, a: 1}
