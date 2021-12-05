@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e81d46fcaca1c094cba28c61eacf0c14, type: 3}
   m_Name: BlueBarrel
   m_EditorClassIdentifier: 
-  radius: 2.16
+  radius: 2
   damage: 10
-  color: {r: 0.012682426, g: 0.21313632, b: 0.8962264, a: 1}
+  color: {r: 0, g: 0.15100649, b: 0.7924528, a: 1}
